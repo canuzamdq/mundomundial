@@ -65,7 +65,7 @@ function menuComprar(array){
 
 function opcion1Comprar(opcion) {
     switch (opcion) {
-            case compra: 
+            case compra: // se generan tantos "case" como items que tenga el array stock
                 llenarCarrito(compra)
                 console.log(carritoAcumulado)
             break
@@ -120,7 +120,7 @@ function llenarCarrito(indice) {
 // Funcion para eliminar un elemento del stock
 
 function eliminarStock(array){
-    console.log("A partir del stock ingrese el id de la camiseta a eliminar del stock")
+    alert("Seleccione un item que se muestra en consola para eliminar")
     for(let elem of array){
         console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
     }
@@ -136,12 +136,13 @@ function eliminarStock(array){
 // Funcion para modificar el stock
 
 function modificarStock(array) {
-    console.log("A partir del stock ingrese el id de la camiseta a modificar")
+    alert("Seleccione un elemento del stock mostrado por consola para modificar")
+    
     for(let elem of array){
         console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
     }
     let idModificar = parseInt(prompt("Ingrese el id a modificar"))
-    //Mapero de arrya para obtener los indices
+    //Mapeo de array para obtener los indices
     let indices = array.map(camiseta => camiseta.id)
     //indexOf para buscar ese ID en el array de indices 
     let indice = indices.indexOf(idModificar)
@@ -178,6 +179,38 @@ function ordenarAlfabeticamente(array){
 
 }
 
+//Funciones para buscar
+
+function buscarPais(array){
+    let paisBuscado = prompt("Ingrese el pais de la camiseta a buscar:").toUpperCase()
+    let busqueda = array.filter(
+        (camiseta)=> camiseta.pais == paisBuscado
+    )
+    if(busqueda.length == 0){
+        alert(`No se encontraron camisetas de ${paisBuscado}`)
+    }else{
+        mostrarStock(busqueda)
+    }
+}
+
+function buscarTalle(array){
+    let talleBuscado = prompt("Ingrese el talle a buscar (S-M-L-XL):").toUpperCase()
+    if (talleBuscado == "S" || talleBuscado == "M" || talleBuscado == "L" || talleBuscado == "XL" ){
+        let busqueda = array.filter(
+            (camiseta)=> camiseta.talle == talleBuscado
+        )
+        if(busqueda.length == 0){
+            alert(`No se encontraron camisetas talle ${talleBuscado}`)
+        }else{
+            mostrarStock(busqueda)
+        }
+    }else {
+        alert(`Verifique el dato ingresado`)
+        buscarTalle(array)
+        
+    }
+}
+
 
 
 // Funcion para mostrar el menu principal y sus submenus
@@ -206,7 +239,9 @@ function menuPrincipal(){
                                 3 - Borar un elemento del stock
                                 4 - Modificar un elemento del Stock
                                 5 - Ordenar Stock
-                                6 - Volver al menú anterior`
+                                6 - Buscar camisetas por pais
+                                7 - Buscar camisetas por talle
+                                8 - Volver al menú anterior`
                                 
                                 ))
                                 switch(opcionABM) {
@@ -231,9 +266,9 @@ function menuPrincipal(){
                                     case 5:
                                         let opcionOrdenar = parseInt(prompt(`Seleccione una opcion:
                                         
-                                                                1 - Ordenar de menor a mayor precio
-                                                                2 - Ordenar de mayor a menor precio
-                                                                3 - Ordenar alfaético por pais`))
+                                                1 - Ordenar de menor a mayor precio
+                                                2 - Ordenar de mayor a menor precio
+                                                3 - Ordenar alfaético por pais`))
                                             switch(opcionOrdenar){
                                                 case 1:
                                                     ordenarMenorMayor(stock)
@@ -250,14 +285,21 @@ function menuPrincipal(){
                                                 default:
                                                     alert("Verifique la opcion ingresada")
                                                 break
-
                                             }
+                                    break       
                                     case 6:
+                                        buscarPais(stock)
+                                    break
+                                    case 7:
+                                        buscarTalle(stock)
+                                    break
+                                    case 8:
                                         menuPrincipal()
                                     break
                                     default:
                                         alert(`Verifique la opción ingresada`)
-
+                                    break
+                                
                                 }
 
         break
