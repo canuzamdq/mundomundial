@@ -103,7 +103,7 @@ function opcion1Comprar(opcion) {
     }
 
 
-// Función carrito. Acumula los productos y calclual el subtotal y el total de la compra (este ultimo con iva del 21%)
+// Función carrito. Acumula los productos y calcula el subtotal y el total de la compra (este ultimo con iva del 21%)
 function llenarCarrito(indice) {
         if (indice == 0) {
             bandera = false
