@@ -1,88 +1,278 @@
-// Declaración de variables
+// variables globales
 
-const precio1 = 14000
-const precio2 = 12000
-const precio3 = 10000
+let subtotal = 0  
+let total = 0  
+const carrito = [] 
+let carritoAcumulado = ""  
+bandera = true
 
-const item1 = "Camiseta selección Argentina"
-const item2 = "Camiseta selección Brasil"
-const item3 = "Camiseta selección Uruguay"
-const item4 = "Camiseta selección Ecuador"
+// class constructora
 
-let precioTotal = 0
-let bandera = true
-
-// Función menuPrincipal: muesta la lisa de artículos 
-
-function menuPrincipal() {
-    articulo = parseInt(prompt(`Seleccione los articulos de la lista que desea comprar:
-        1 - ${item1} $${precio1}-
-        2 - ${item2} $${precio2}.-
-        3 - ${item3} $${precio3}.-
-        4 - ${item4} $${precio3}.-
-        5 - FINALIZAR COMPRA`))
+class camisetas {
+    constructor(id, pais, talle, precio){
+        this.id = id;
+        this.pais = pais;
+        this.talle = talle;
+        this.precio = precio;
+    }
+    
 }
 
+// Instanciación de objetos
 
-//Función compra: Permite al usuario finalizar la compra. Valida que el caracter ingresado sea "s" o "n"
+const camiseta1 = new camisetas(1, "ARGENTINA", "L", 13000)
+const camiseta2 = new camisetas(2, "ARGENTINA", "M", 12000)
+const camiseta3 = new camisetas(3, "URUGUAY", "M", 13500)
+const camiseta4 = new camisetas(4, "ECUADOR", "L", 9000)
+const camiseta5 = new camisetas(5, "ECUADOR", "M", 9000)
+const camiseta6 = new camisetas(6, "BRASIL", "M", 12500)
+const camiseta7 = new camisetas(7, "BRASIL", "L", 14000)
 
-function compra() {
-    opcion = prompt("¿Desea comprar otro artículo (S/N)")
-    if (opcion.toLowerCase() == "s") {
-        menuPrincipal()
-    } else if (opcion.toLowerCase() == "n") {
-        console.log(`TOTAL DE LA COMPRA: $${precioTotal}`)
-        alert("¡Muchas gracias por su compra!")
-        bandera = false
-    } else if (opcion.toLowerCase() <= "s" || opcion.toLowerCase() <= "n"){
-        alert("Por favor veridique la opción ingresada")
-        compra()
 
+
+// Array de objetos
+
+const stock = []
+stock.push(camiseta1, camiseta2, camiseta3, camiseta4, camiseta5, camiseta6, camiseta7,)
+
+//Funciones
+
+//Funcion que muestra el stock existente. Recibe como pararámetro el array stock (no se utiliza for of por que muestra un alert por cada elemento)
+
+function mostrarStock(array) {
+    let menu = ""
+    for (let i = 0; i < array.length; i++) {
+        menu+= (`${array[i].id} - Camiseta de ${array[i].pais} / Talle ${array[i].talle} / Precio: \$${array[i].precio}\n`)
+        }
+        alert(`${menu}`)
+        
+}
+
+// Funcion que muestra el stock existente y permite seleccionar para comprar. Recibe como parametro el array stock
+
+function menuComprar(array){
+    let menu = ""
+    for (let i = 0; i < array.length; i++) {
+        array[i].id = i + 1 //Asigna ID corralativos empezando por 1
+        menu+= (`${array[i].id} - Camiseta de ${array[i].pais} / Talle ${array[i].talle} / Precio: \$${array[i].precio}\n`)
+    }
+    compra = parseInt(prompt(`${menu}0 - FINALIZAR COMPRA \n Seleccione una opción:`))
+    
+    
+}
+
+// Funcion que recibe como parámetro la opción de stock a comprar. Llama a la función llenarCarrito (acumula la compra).
+
+function opcion1Comprar(opcion) {
+    switch (opcion) {
+            case compra: 
+                llenarCarrito(compra)
+                console.log(carritoAcumulado)
+            break
+            /*case 2:
+                llenarCarrito(2)
+                console.log(carritoAcumulado)
+            break
+            case 3:
+                llenarCarrito(3)
+                console.log(carritoAcumulado)
+            break
+            case 4:
+                llenarCarrito(4)
+                console.log(carritoAcumulado)
+            break
+            case 5:
+                llenarCarrito(5)
+                console.log(carritoAcumulado)
+            break
+            case 6:
+                llenarCarrito(6)
+                console.log(carritoAcumulado)
+            break
+            case 7:
+                llenarCarrito(7)
+                console.log(carritoAcumulado)
+            break*/
+            
+            default:
+                alert("Verifique la opción ingresada!")
+                
+            break
+    
+        }
     }
 
+
+// Función carrito. Acumula los productos y calclual el subtotal y el total de la compra (este ultimo con iva del 21%)
+function llenarCarrito(indice) {
+        if (indice == 0) {
+            bandera = false
+            alert(`Detalle de compra de camisetas:\n ${carritoAcumulado} \n TOTAL C/IVA: ${total}` )
+            alert("Gracias por su compra")
+        }else{
+        subtotal+= stock[indice-1].precio
+        total = subtotal * 1.21
+        carrito.push(stock[indice-1])
+        carritoAcumulado+=(`${carrito[carrito.length-1].pais} talle: ${carrito[carrito.length-1].talle} precio: ${carrito[carrito.length-1].precio}/ Subtotal: $${subtotal}\n`)
+        }
+}
+
+// Funcion para eliminar un elemento del stock
+
+function eliminarStock(array){
+    console.log("A partir del stock ingrese el id de la camiseta a eliminar del stock")
+    for(let elem of array){
+        console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
+    }
+    let idEliminar = parseInt(prompt("Ingrese el id a eliminar"))
+    //mapeamos para tener un array con los indices
+    let indices = array.map(camiseta => camiseta.id)
+    //indexOf para buscar ese ID en el array de indices y devolvernos la posición
+    let indice = indices.indexOf(idEliminar)
+    //con la posición del elemento aplico splice al array de objetos
+    array.splice(indice, 1)
+}
+
+// Funcion para modificar el stock
+
+function modificarStock(array) {
+    console.log("A partir del stock ingrese el id de la camiseta a modificar")
+    for(let elem of array){
+        console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
+    }
+    let idModificar = parseInt(prompt("Ingrese el id a modificar"))
+    //Mapero de arrya para obtener los indices
+    let indices = array.map(camiseta => camiseta.id)
+    //indexOf para buscar ese ID en el array de indices 
+    let indice = indices.indexOf(idModificar)
+    //Ingreso de los nuevos datos
+    pais = prompt(`Ingrese el pais de la camiseta:`).toUpperCase()
+    talle = prompt(`Ingrese talle de la camiseta (S-M-L-XL):`).toUpperCase()
+    precio = parseInt(prompt(`Ingrese precio de la camiseta:`))
+    //con la posición del elemento y los datos ingresados modificamos el array
+    array[indice].pais = pais
+    array[indice].talle = talle
+    array[indice].precio = precio 
+}
+
+// Funciones para ordenar el stock
+
+function ordenarMayorMenor(array){
+    console.log(array.sort((a,b) => (b.precio - a.precio)))
+}
+
+function ordenarMenorMayor(array){
+    array.sort((a, b)=>(a.precio - b.precio))
+}
+
+function ordenarAlfabeticamente(array){
+    array.sort((a, b) => {
+        if(a.pais == b.pais) {
+            return 0; 
+        }
+        if(a.pais < b.pais) {
+            return -1;
+        }
+        return 1;
+    })
+
 }
 
 
-// Cominenzo de código. Se puede visualizar el estado parcial y total de la compra desde la consola del navegador
 
-alert(`¡Bienvenido a Mundo Mundial Camisetas Qatar 2022!`)
+// Funcion para mostrar el menu principal y sus submenus
+
+function menuPrincipal(){
+
+    let opcion = parseInt(prompt(`¡Bienvenido a Mundo Mundial camisetas Qatar 2022!
+
+                        Seleccione una opción:
+                        1 - Comprar camisetas
+                        2 - ABM de stock
+                        3 - Salir`))
+    while (bandera == true) {
+    switch(opcion){
+        case 1:
+            
+            menuComprar(stock)
+            opcion1Comprar(compra)
+
+        break
+        case 2:
+            let opcionABM = parseInt(prompt(`Seleccione una opción
+
+                                1 - Ver stock
+                                2 - Agregar un elemento del stock
+                                3 - Borar un elemento del stock
+                                4 - Modificar un elemento del Stock
+                                5 - Ordenar Stock
+                                6 - Volver al menú anterior`
+                                
+                                ))
+                                switch(opcionABM) {
+                                    case 1:
+                                        mostrarStock(stock)
+                                    break
+                                    case 2:
+                                        let id = stock.length + 1
+                                        let pais = prompt(`Ingrese pais de la camiseta:`).toUpperCase()
+                                        let talle = prompt(`Ingrese talle de la camiseta (S-M-L-XL):`).toUpperCase()
+                                        let precio = parseInt(prompt(`Ingrese precio de la camiseta:`))
+                                        const camiseta = new camisetas(id, pais, talle, precio)
+                                        stock.push(camiseta)
+                                       
+                                    break
+                                    case 3:
+                                        eliminarStock(stock)                                     
+                                    break
+                                    case 4:
+                                        modificarStock(stock)
+                                    break
+                                    case 5:
+                                        let opcionOrdenar = parseInt(prompt(`Seleccione una opcion:
+                                        
+                                                                1 - Ordenar de menor a mayor precio
+                                                                2 - Ordenar de mayor a menor precio
+                                                                3 - Ordenar alfaético por pais`))
+                                            switch(opcionOrdenar){
+                                                case 1:
+                                                    ordenarMenorMayor(stock)
+                                                    mostrarStock(stock)
+                                                break
+                                                case 2:
+                                                    ordenarMayorMenor(stock)
+                                                    mostrarStock(stock)
+                                                break
+                                                case 3: 
+                                                    ordenarAlfabeticamente(stock)
+                                                    mostrarStock(stock)
+                                                break
+                                                default:
+                                                    alert("Verifique la opcion ingresada")
+                                                break
+
+                                            }
+                                    case 6:
+                                        menuPrincipal()
+                                    break
+                                    default:
+                                        alert(`Verifique la opción ingresada`)
+
+                                }
+
+        break
+        case 3:
+            alert("Muchas gracias por su visita")
+            bandera = false
+        break
+        default:
+            alert("Verifique la opción ingresada")
+            menuPrincipal()
+        break;
+
+    }}
+}
+
+// Ejecución del algortimo.
 
 menuPrincipal()
-
-while (bandera) {
-    
-    while (isNaN(articulo)){
-        alert("Por favor verifique la opción ingresada")
-        menuPrincipal()
-    }
-
-    if (articulo == 5) {
-        console.log(`TOTAL DE LA COMPRA: $${precioTotal}`)
-        alert("¡Muchas gracias por su compra!")
-        bandera = false
-
-    } else if (articulo == 1) {
-        precioTotal = precioTotal + precio1
-        console.log(`${item1} $${precio1}- Subtotal $${precioTotal}`)
-        compra()
-
-    } else if (articulo == 2) {
-        precioTotal = precioTotal + precio2
-        console.log(`${item2} $${precio2}- Subtotal $${precioTotal}`)
-        compra()
-
-    } else if (articulo == 3) {
-        precioTotal = precioTotal + precio3
-        console.log(`${item3} $${precio3}- Subtotal $${precioTotal}`)
-        compra()
-
-    } else if (articulo == 4) {
-        precioTotal = precioTotal + precio3
-        console.log(`${item4} $${precio3}-Subtotal $${precioTotal}`)
-        compra()
-
-    } else if (articulo < 1 || articulo > 5) {
-        alert("Por favor verifique el dato ingresado")
-        menuPrincipal()
-    }
-}
