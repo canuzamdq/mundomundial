@@ -1,127 +1,221 @@
 // variables globales
 
-let subtotal = 0  
-let total = 0  
-const carrito = [] 
-let carritoAcumulado = ""  
+let subtotal = 0
+let total = 0
+let carrito = []
+let carritoAcumulado = ""
 bandera = true
 
 // class constructora
 
 class camisetas {
-    constructor(id, pais, talle, precio){
+    constructor(id, pais, talle, precio, imagen) {
         this.id = id;
         this.pais = pais;
         this.talle = talle;
         this.precio = precio;
+        this.imagen = imagen;
     }
-    
+
 }
 
 // Instanciación de objetos
 
-const camiseta1 = new camisetas(1, "ARGENTINA", "L", 13000)
-const camiseta2 = new camisetas(2, "ARGENTINA", "M", 12000)
-const camiseta3 = new camisetas(3, "URUGUAY", "M", 13500)
-const camiseta4 = new camisetas(4, "ECUADOR", "L", 9000)
-const camiseta5 = new camisetas(5, "ECUADOR", "M", 9000)
-const camiseta6 = new camisetas(6, "BRASIL", "M", 12500)
-const camiseta7 = new camisetas(7, "BRASIL", "L", 14000)
+const camiseta1 = new camisetas(1, "ARGENTINA", "L", 13000, "argentina.webp")
+const camiseta2 = new camisetas(2, "ARGENTINA", "M", 12000, "argentina.webp")
+const camiseta3 = new camisetas(3, "URUGUAY", "M", 13500, "uruguay.webp")
+const camiseta4 = new camisetas(4, "ECUADOR", "L", 9000, "ecuador.webp")
+const camiseta5 = new camisetas(5, "ECUADOR", "M", 9000, "ecuador.webp")
+const camiseta6 = new camisetas(6, "BRASIL", "M", 12500, "brasil.webp")
+const camiseta7 = new camisetas(7, "BRASIL", "L", 14000, "brasil.webp")
+const camiseta8 = new camisetas(8, "ALEMANIA", "S", 15000, "alemania.webp")
+const camiseta9 = new camisetas(9, "ALEMANIA", "M", 15000, "alemania.webp")
+const camiseta10 = new camisetas(10, "FRANCIA", "S", 12500, "francia.webp")
+const camiseta11 = new camisetas(11, "FRANCIA", "S", 12500, "francia.webp")
+const camiseta12 = new camisetas(12, "FRANCIA", "S", 12500, "francia.webp")
+const camiseta13 = new camisetas(13, "ESPAÑA", "S", 12500, "espana.webp")
+const camiseta14 = new camisetas(14, "ESPAÑA", "M", 12500, "espana.webp")
+const camiseta15 = new camisetas(15, "ESPAÑA", "L", 12500, "espana.webp")
 
 
 
 // Array de objetos
 
-const stock = []
-stock.push(camiseta1, camiseta2, camiseta3, camiseta4, camiseta5, camiseta6, camiseta7,)
+const stock = [camiseta1, camiseta2, camiseta3, camiseta4, camiseta5, camiseta6, camiseta7, camiseta8, camiseta9, camiseta10, camiseta11, camiseta12, camiseta13, camiseta14, camiseta15]
+
+
+// Captura DOM
+
+let divProductos = document.getElementById("productos") // Funcion mostrarStockDOM
+let btnNuevaCamiseta = document.getElementById("btnNuevaCamiseta") // Funcnion nuevaCamiseta
+let coincidencia = document.getElementById("coincidencia") // Funcion buscarCamiseta
+let buscador = document.getElementById("buscador") // Funcion buscarCamiseta
+let ordenar = document.getElementById("filtro") // Funcion ordenar
+let modalCarrito = document.getElementById("modalBody") //Funcion mostrarCarrito
+let modalFooter = document.getElementById("modalFooter") // Funcion calcularTotal
+
+
+
+
 
 //Funciones
 
-//Funcion que muestra el stock existente. Recibe como pararámetro el array stock (no se utiliza for of por que muestra un alert por cada elemento)
+//Funcion que muestra mediante cards el stock existente. Recibe como pararámetro el array stock.
 
-function mostrarStock(array) {
-    let menu = ""
-    for (let i = 0; i < array.length; i++) {
-        menu+= (`${array[i].id} - Camiseta de ${array[i].pais} / Talle ${array[i].talle} / Precio: \$${array[i].precio}\n`)
-        }
-        alert(`${menu}`)
-        
-}
+function mostrarStockDOM(array) {
+    divProductos.innerHTML = "" // antes de recorrer el array resetea el div
+    for (let producto of array) {
+        let nuevaCamiseta = document.createElement("div")
+        nuevaCamiseta.classList.add("col-12", "col-md-6", "col-lg-4", "my-1")
 
-// Funcion que muestra el stock existente y permite seleccionar para comprar. Recibe como parametro el array stock
+        nuevaCamiseta.innerHTML = `<div id="${producto.id}" class="card" style="width: 18rem;" id="cardCamisetas">
+                                        <img src="../img/${producto.imagen}" class="card-img-top" alt="foto camiseta"> 
+                                        <div class="card-body">
+                                            <h5 class="card-title">${producto.pais}</h5>
+                                            <p class="card-text">Camiseta de ${producto.pais} talle ${producto  .talle}</p>
+                                            <p>Precio $${producto.precio}</p>
+                                        <button id="btnAgregar${producto.id}" class="btn btn-primary">Agregar al Carrito</button>
+                                        </div>
+                                    </div>`
+        divProductos.appendChild(nuevaCamiseta)
+        let btnAgregado = document.getElementById(`btnAgregar${producto.id}`)
+        btnAgregado.addEventListener("click", () => {agregarAlCarrito(producto)})
 
-function menuComprar(array){
-    let menu = ""
-    for (let i = 0; i < array.length; i++) {
-        array[i].id = i + 1 //Asigna ID corralativos empezando por 1
-        menu+= (`${array[i].id} - Camiseta de ${array[i].pais} / Talle ${array[i].talle} / Precio: \$${array[i].precio}\n`)
-    }
-    compra = parseInt(prompt(`${menu}0 - FINALIZAR COMPRA \n Seleccione una opción:`))
-    
-    
-}
 
-// Funcion que recibe como parámetro la opción de stock a comprar. Llama a la función llenarCarrito (acumula la compra).
-
-function opcion1Comprar(opcion) {
-    switch (opcion) {
-            case compra: // se generan tantos "case" como items que tenga el array stock
-                llenarCarrito(compra)
-                console.log(carritoAcumulado)
-            break
-            /*case 2:
-                llenarCarrito(2)
-                console.log(carritoAcumulado)
-            break
-            case 3:
-                llenarCarrito(3)
-                console.log(carritoAcumulado)
-            break
-            case 4:
-                llenarCarrito(4)
-                console.log(carritoAcumulado)
-            break
-            case 5:
-                llenarCarrito(5)
-                console.log(carritoAcumulado)
-            break
-            case 6:
-                llenarCarrito(6)
-                console.log(carritoAcumulado)
-            break
-            case 7:
-                llenarCarrito(7)
-                console.log(carritoAcumulado)
-            break*/
-            
-            default:
-                alert("Verifique la opción ingresada!")
-                
-            break
-    
-        }
     }
 
+}
+
+function agregarAlCarrito(producto) {
+    carrito.push(producto)
+    modalCarrito.innerHTML = ""
+    mostrarCarrito(carrito)
+    alert("Producto agregado al carrito")
+}
+
+function mostrarCarrito(array) {
+    for (mostrarProductos of array) {
+        modalCarrito.innerHTML += `
+        <div class="card border-primary mb-3" id ="productoCarrito${mostrarProductos.id}" style="max-width: 250px;">
+            <img class="card-img-top" height="auto" src="../img/${mostrarProductos.imagen}" alt="${mostrarProductos.pais}">
+            <div class="card-body">
+                    <p class="card-title">Camiseta de ${mostrarProductos.pais}</p>
+                    <p class="card-text">Talle ${mostrarProductos.talle}</p>
+                    <p class="card-text">$${mostrarProductos.precio}</p> 
+                    <button class= "btn btn-danger" id="botonEliminar${mostrarProductos.id}"><i class="fas fa-trash-alt"></i>Eliminar</button>
+            </div>    
+        </div>`
+        let btnBorrarProducto = document.getElementById(`botonEliminar${mostrarProductos.id}`)
+        btnBorrarProducto.addEventListener("click", ()=>{borrarDelCarrito(array)}) 
+
+    }
+    
+    subtotal += mostrarProductos.precio
+    console.log(subtotal)
+    
+}
+
+function borrarDelCarrito(carrito){
+        let eliminarProducto = carrito.indexOf(mostrarProductos)
+        alert(eliminarProducto)
+        carrito.splice(eliminarProducto, 1)
+        modalCarrito.innerHTML = ""
+        alert("Producto Eliminado del carrito")
+        mostrarCarrito(array)
+    
+}   
+
+
+//Funcion para buscar
+
+function buscarCamiseta(camisetaBuscada, array) {
+
+    let busqueda = array.filter(
+        (camiseta) => camiseta.pais.toLowerCase().includes(camisetaBuscada.toLowerCase()) || camiseta.pais.toLowerCase().includes(camisetaBuscada.toLowerCase())
+    )
+    if (busqueda.length == 0) {
+        coincidencia.innerHTML = ""
+        divProductos.innerHTML = ""
+        let divNuevo = document.createElement("div")
+        divNuevo.innerHTML = `<p>No se encontraron camisetas de "${camisetaBuscada}". A continuación podrá ver nuestro stock de camisetas vigente:</p>`
+        coincidencia.appendChild(divNuevo)
+        mostrarStockDOM(array)
+    } else {
+        coincidencia.innerHTML = ""
+        mostrarStockDOM(busqueda)
+    }
+}
+
+
+// Funcion para ordenar el stock
+
+function ordenarStock(array) {
+    divProductos.innerHTML = ""
+    if (ordenar.value == "ordenAlfabetico") {
+        array.sort((a, b) => {
+            if (a.pais == b.pais) {
+                return 0;
+            }
+            if (a.pais < b.pais) {
+                return -1;
+            }
+            return 1;
+        })
+        mostrarStockDOM(array)
+
+    } else if (ordenar.value == "precioMayor") {
+        array.sort((a, b) => (b.precio - a.precio))
+        mostrarStockDOM(array)
+    } else if (ordenar.value == "precioMenor") {
+        array.sort((a, b) => (a.precio - b.precio))
+        mostrarStockDOM(array)
+    } else {
+        mostrarStockDOM(array)
+    }
+
+}
+
+
+// Funcion para Agregar camisetas al stock
+
+function nuevaCamiseta(array) {
+    let nuevoPais = document.getElementById("nuevoPais")
+    let nuevoTalle = document.getElementById("nuevoTalle")
+    let nuevoPrecio = document.getElementById("nuevoPrecio")
+    let id = stock.length + 1
+    const camiseta = new camisetas(id, nuevoPais.value, nuevoTalle.value, nuevoPrecio.value, "generica.jpg")
+    array.push(camiseta)
+    //Reset inputs
+    nuevoPais.value = ""
+    nuevoTalle.value = ""
+    nuevoPrecio.value = ""
+    mostrarStockDOM(array)
+}
+
+
+
+
+// CODIGO ANTERIOR
 
 // Función carrito. Acumula los productos y calcula el subtotal y el total de la compra (este ultimo con iva del 21%)
 function llenarCarrito(indice) {
-        if (indice == 0) {
-            bandera = false
-            alert(`Detalle de compra de camisetas:\n ${carritoAcumulado} \n TOTAL C/IVA: ${total}` )
-            alert("Gracias por su compra")
-        }else{
-        subtotal+= stock[indice-1].precio
+    if (indice == 0) {
+        bandera = false
+        alert(`Detalle de compra de camisetas:\n ${carritoAcumulado} \n TOTAL C/IVA: ${total}`)
+        alert("Gracias por su compra")
+    } else {
+        subtotal += stock[indice - 1].precio
         total = subtotal * 1.21
-        carrito.push(stock[indice-1])
-        carritoAcumulado+=(`${carrito[carrito.length-1].pais} talle: ${carrito[carrito.length-1].talle} precio: ${carrito[carrito.length-1].precio}/ Subtotal: $${subtotal}\n`)
-        }
+        carrito.push(stock[indice - 1])
+        carritoAcumulado += (`${carrito[carrito.length-1].pais} talle: ${carrito[carrito.length-1].talle} precio: ${carrito[carrito.length-1].precio}/ Subtotal: $${subtotal}\n`)
+    }
 }
 
 // Funcion para eliminar un elemento del stock
 
-function eliminarStock(array){
+function eliminarStock(array) {
     alert("Seleccione un item que se muestra en consola para eliminar")
-    for(let elem of array){
+    for (let elem of array) {
         console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
     }
     let idEliminar = parseInt(prompt("Ingrese el id a eliminar"))
@@ -137,8 +231,8 @@ function eliminarStock(array){
 
 function modificarStock(array) {
     alert("Seleccione un elemento del stock mostrado por consola para modificar")
-    
-    for(let elem of array){
+
+    for (let elem of array) {
         console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
     }
     let idModificar = parseInt(prompt("Ingrese el id a modificar"))
@@ -153,168 +247,54 @@ function modificarStock(array) {
     //con la posición del elemento y los datos ingresados modificamos el array
     array[indice].pais = pais
     array[indice].talle = talle
-    array[indice].precio = precio 
+    array[indice].precio = precio
 }
 
-// Funciones para ordenar el stock
 
-function ordenarMayorMenor(array){
-    console.log(array.sort((a,b) => (b.precio - a.precio)))
-}
 
-function ordenarMenorMayor(array){
-    array.sort((a, b)=>(a.precio - b.precio))
-}
 
-function ordenarAlfabeticamente(array){
-    array.sort((a, b) => {
-        if(a.pais == b.pais) {
-            return 0; 
-        }
-        if(a.pais < b.pais) {
-            return -1;
-        }
-        return 1;
-    })
 
-}
-
-//Funciones para buscar
-
-function buscarPais(array){
-    let paisBuscado = prompt("Ingrese el pais de la camiseta a buscar:").toUpperCase()
-    let busqueda = array.filter(
-        (camiseta)=> camiseta.pais == paisBuscado
-    )
-    if(busqueda.length == 0){
-        alert(`No se encontraron camisetas de ${paisBuscado}`)
-    }else{
-        mostrarStock(busqueda)
-    }
-}
-
-function buscarTalle(array){
+function buscarTalle(array) {
     let talleBuscado = prompt("Ingrese el talle a buscar (S-M-L-XL):").toUpperCase()
-    if (talleBuscado == "S" || talleBuscado == "M" || talleBuscado == "L" || talleBuscado == "XL" ){
+    if (talleBuscado == "S" || talleBuscado == "M" || talleBuscado == "L" || talleBuscado == "XL") {
         let busqueda = array.filter(
-            (camiseta)=> camiseta.talle == talleBuscado
+            (camiseta) => camiseta.talle == talleBuscado
         )
-        if(busqueda.length == 0){
+        if (busqueda.length == 0) {
             alert(`No se encontraron camisetas talle ${talleBuscado}`)
-        }else{
+        } else {
             mostrarStock(busqueda)
         }
-    }else {
+    } else {
         alert(`Verifique el dato ingresado`)
         buscarTalle(array)
-        
+
     }
 }
 
 
 
-// Funcion para mostrar el menu principal y sus submenus
-
-function menuPrincipal(){
-
-    let opcion = parseInt(prompt(`¡Bienvenido a Mundo Mundial camisetas Qatar 2022!
-
-                        Seleccione una opción:
-                        1 - Comprar camisetas
-                        2 - ABM de stock
-                        3 - Salir`))
-    while (bandera == true) {
-    switch(opcion){
-        case 1:
-            
-            menuComprar(stock)
-            opcion1Comprar(compra)
-
-        break
-        case 2:
-            let opcionABM = parseInt(prompt(`Seleccione una opción
-
-                                1 - Ver stock
-                                2 - Agregar un elemento del stock
-                                3 - Borar un elemento del stock
-                                4 - Modificar un elemento del Stock
-                                5 - Ordenar Stock
-                                6 - Buscar camisetas por pais
-                                7 - Buscar camisetas por talle
-                                8 - Volver al menú anterior`
-                                
-                                ))
-                                switch(opcionABM) {
-                                    case 1:
-                                        mostrarStock(stock)
-                                    break
-                                    case 2:
-                                        let id = stock.length + 1
-                                        let pais = prompt(`Ingrese pais de la camiseta:`).toUpperCase()
-                                        let talle = prompt(`Ingrese talle de la camiseta (S-M-L-XL):`).toUpperCase()
-                                        let precio = parseInt(prompt(`Ingrese precio de la camiseta:`))
-                                        const camiseta = new camisetas(id, pais, talle, precio)
-                                        stock.push(camiseta)
-                                       
-                                    break
-                                    case 3:
-                                        eliminarStock(stock)                                     
-                                    break
-                                    case 4:
-                                        modificarStock(stock)
-                                    break
-                                    case 5:
-                                        let opcionOrdenar = parseInt(prompt(`Seleccione una opcion:
-                                        
-                                                1 - Ordenar de menor a mayor precio
-                                                2 - Ordenar de mayor a menor precio
-                                                3 - Ordenar alfaético por pais`))
-                                            switch(opcionOrdenar){
-                                                case 1:
-                                                    ordenarMenorMayor(stock)
-                                                    mostrarStock(stock)
-                                                break
-                                                case 2:
-                                                    ordenarMayorMenor(stock)
-                                                    mostrarStock(stock)
-                                                break
-                                                case 3: 
-                                                    ordenarAlfabeticamente(stock)
-                                                    mostrarStock(stock)
-                                                break
-                                                default:
-                                                    alert("Verifique la opcion ingresada")
-                                                break
-                                            }
-                                    break       
-                                    case 6:
-                                        buscarPais(stock)
-                                    break
-                                    case 7:
-                                        buscarTalle(stock)
-                                    break
-                                    case 8:
-                                        menuPrincipal()
-                                    break
-                                    default:
-                                        alert(`Verifique la opción ingresada`)
-                                    break
-                                
-                                }
-
-        break
-        case 3:
-            alert("Muchas gracias por su visita")
-            bandera = false
-        break
-        default:
-            alert("Verifique la opción ingresada")
-            menuPrincipal()
-        break;
-
-    }}
-}
 
 // Ejecución del algortimo.
 
-menuPrincipal()
+mostrarStockDOM(stock)
+
+/*let bontonBuscar = document.getElementById("botonBuscar")
+let buscador = document.getElementById("buscador")
+bontonBuscar.addEventListener("click", respuestaClick)
+
+function respuestaClick() {
+    alert(`Buscando ${buscador.value}...`)
+}*/
+
+// Eventos
+
+btnNuevaCamiseta.addEventListener("click", () => {
+    nuevaCamiseta(stock)
+})
+buscador.addEventListener("input", () => {
+    buscarCamiseta(buscador.value, stock)
+})
+ordenar.addEventListener("change", () => {
+    ordenarStock(stock)
+})
