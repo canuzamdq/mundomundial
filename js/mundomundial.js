@@ -74,7 +74,7 @@ function mostrarStockDOM(array) {
         nuevaCamiseta.classList.add("col-12", "col-md-6", "col-lg-4", "my-1")
 
         nuevaCamiseta.innerHTML = `<div id="${producto.id}" class="card" style="width: 18rem;" id="cardCamisetas">
-                                        <img src="../img/${producto.imagen}" class="card-img-top" alt="foto camiseta"> 
+                                        <img src="/img/${producto.imagen}" class="card-img-top" alt="foto camiseta"> 
                                         <div class="card-body">
                                             <h5 class="card-title">${producto.pais}</h5>
                                             <p class="card-text">Camiseta de ${producto.pais} talle ${producto  .talle}</p>
