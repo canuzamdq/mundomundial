@@ -3,10 +3,7 @@
 let subtotal = 0
 let total = 0
 let carrito = []
-let carritoAcumulado = ""
-bandera = true
 
-// class constructora
 
 class camisetas {
     constructor(id, pais, talle, precio, imagen) {
@@ -41,8 +38,16 @@ const camiseta15 = new camisetas(15, "ESPAÑA", "L", 12500, "espana.webp")
 
 // Array de objetos
 
-const stock = [camiseta1, camiseta2, camiseta3, camiseta4, camiseta5, camiseta6, camiseta7, camiseta8, camiseta9, camiseta10, camiseta11, camiseta12, camiseta13, camiseta14, camiseta15]
+let stock = []
 
+if (localStorage.getItem("stock")){
+    stock = JSON.parse(localStorage.getItem("stock"))
+
+} else{
+    
+    stock.push(camiseta1, camiseta2, camiseta3, camiseta4, camiseta5, camiseta6, camiseta7, camiseta8, camiseta9, camiseta10, camiseta11, camiseta12, camiseta13, camiseta14, camiseta15)
+    localStorage.setItem("stock", JSON.stringify(stock))
+}
 
 // Captura DOM
 
@@ -105,9 +110,10 @@ function mostrarCarrito(array) {
                     <button class= "btn btn-danger" id="botonEliminar${mostrarProductos.id}"><i class="fas fa-trash-alt"></i>Eliminar</button>
             </div>    
         </div>`
+        
         let btnBorrarProducto = document.getElementById(`botonEliminar${mostrarProductos.id}`)
         btnBorrarProducto.addEventListener("click", ()=>{borrarDelCarrito(array)}) 
-
+        
     }
     
     subtotal += mostrarProductos.precio
@@ -117,11 +123,10 @@ function mostrarCarrito(array) {
 
 function borrarDelCarrito(carrito){
         let eliminarProducto = carrito.indexOf(mostrarProductos)
-        alert(eliminarProducto)
         carrito.splice(eliminarProducto, 1)
-        modalCarrito.innerHTML = ""
         alert("Producto Eliminado del carrito")
-        mostrarCarrito(array)
+        modalCarrito.innerHTML = ""
+        mostrarCarrito(carrito)
     
 }   
 
@@ -185,17 +190,33 @@ function nuevaCamiseta(array) {
     let id = stock.length + 1
     const camiseta = new camisetas(id, nuevoPais.value, nuevoTalle.value, nuevoPrecio.value, "generica.jpg")
     array.push(camiseta)
+    localStorage.setItem("stock", JSON.stringify(array))
     //Reset inputs
     nuevoPais.value = ""
     nuevoTalle.value = ""
     nuevoPrecio.value = ""
     mostrarStockDOM(array)
 }
+// Eventos
+
+btnNuevaCamiseta.addEventListener("click", () => {
+    nuevaCamiseta(stock)
+})
+buscador.addEventListener("input", () => {
+    buscarCamiseta(buscador.value, stock)
+})
+ordenar.addEventListener("change", () => {
+    ordenarStock(stock)
+})
+
+mostrarStockDOM(stock)
 
 
 
 
-// CODIGO ANTERIOR
+
+
+/*// CODIGO ANTERIOR
 
 // Función carrito. Acumula los productos y calcula el subtotal y el total de la compra (este ultimo con iva del 21%)
 function llenarCarrito(indice) {
@@ -271,15 +292,7 @@ function buscarTalle(array) {
 
     }
 }
-
-
-
-
-// Ejecución del algortimo.
-
-mostrarStockDOM(stock)
-
-/*let bontonBuscar = document.getElementById("botonBuscar")
+*let bontonBuscar = document.getElementById("botonBuscar")
 let buscador = document.getElementById("buscador")
 bontonBuscar.addEventListener("click", respuestaClick)
 
@@ -287,14 +300,6 @@ function respuestaClick() {
     alert(`Buscando ${buscador.value}...`)
 }*/
 
-// Eventos
 
-btnNuevaCamiseta.addEventListener("click", () => {
-    nuevaCamiseta(stock)
-})
-buscador.addEventListener("input", () => {
-    buscarCamiseta(buscador.value, stock)
-})
-ordenar.addEventListener("change", () => {
-    ordenarStock(stock)
-})
+// Ejecución del algortimo.
+
