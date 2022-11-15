@@ -102,7 +102,7 @@ function mostrarCarrito(array) {
     for (mostrarProductos of array) {
         modalCarrito.innerHTML += `
         <div class="card border-primary mb-3" id ="productoCarrito${mostrarProductos.id}" style="max-width: 250px;">
-            <img class="card-img-top" height="auto" src="../img/${mostrarProductos.imagen}" alt="${mostrarProductos.pais}">
+            <img class="card-img-top" height="auto" src="./img/${mostrarProductos.imagen}" alt="${mostrarProductos.pais}">
             <div class="card-body">
                     <p class="card-title">Camiseta de ${mostrarProductos.pais}</p>
                     <p class="card-text">Talle ${mostrarProductos.talle}</p>
