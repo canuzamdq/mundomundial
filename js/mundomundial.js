@@ -308,27 +308,19 @@ function nuevaCamiseta(array) {
         nuevoPais.value = ""
         nuevoTalle.value = ""
         nuevoPrecio.value = ""
-        Swal.fire({
-            position: 'bottom-center',
-            icon: 'success',
-            title: 'Cargando nuevo producto al stock...',
-            showConfirmButton: false,
-            timer: 3000
-        })
-       // mostrarStockDOM(array)
+        mostrarStockDOM(array)
     } else {
         swal.fire({
             title: "Error",
-            text: "Verifique que todos los campos estén completos",
+            text: "Verifique que todos los campos estén completos y talle (S-M-L-XL)",
             icon: "error",
             confirmButtonText: "Aceptar",
         });
-        //preventDefault()
+       
 
 
     }
 }
-
 
 // Función para finalizar compra. Si no hay productos en el carrito muestra un mensaje de alerta.
 
