@@ -37,7 +37,7 @@ let btnFinalizarCompra = document.getElementById("btnFinalizarCompra") // Botaon
 let stock = []
 
 const cargarStock = async () => {
-    const response = await fetch("./camisetas.json")
+    const response = await fetch("camisetas.json")
     const data = await response.json()
     for (let camiseta of data) {
         let nuevaCamiseta = new camisetas(camiseta.id, camiseta.pais, camiseta.talle, camiseta.precio, camiseta.imagen, camiseta.cantidad)
