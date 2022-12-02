@@ -1,0 +1,138 @@
+[
+    {
+        "id": 1,
+        "pais": "ARGENTINA",
+        "talle": "L",
+        "precio": 13000,
+        "imagen": "argentina.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 2,
+        "pais": "ARGENTINA",
+        "talle": "M",
+        "precio": 12000,
+        "imagen": "argentina.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 3,
+        "pais": "URUGUAY",
+        "talle": "M",
+        "precio": 13500,
+        "imagen": "uruguay.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 4,
+        "pais": "ECUADOR",
+        "talle": "L",
+        "precio": 9000,
+        "imagen": "ecuador.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 5,
+        "pais": "ECUADOR",
+        "talle": "M",
+        "precio": 9000,
+        "imagen": "ecuador.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 6,
+        "pais": "BRASIL",
+        "talle": "M",
+        "precio": 12500,
+        "imagen": "brasil.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 7,
+        "pais": "BRASIL",
+        "talle": "L",
+        "precio": 14000,
+        "imagen": "brasil.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 8,
+        "pais": "ALEMANIA",
+        "talle": "S",
+        "precio": 15000,
+        "imagen": "alemania.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 9,
+        "pais": "ALEMANIA",
+        "talle": "M",
+        "precio": 15000,
+        "imagen": "alemania.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 10,
+        "pais": "FRANCIA",
+        "talle": "S",
+        "precio": 12500,
+        "imagen": "francia.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 11,
+        "pais": "FRANCIA",
+        "talle": "M",
+        "precio": 12500,
+        "imagen": "francia.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 12,
+        "pais": "FRANCIA",
+        "talle": "XL",
+        "precio": 12500,
+        "imagen": "francia.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 13,
+        "pais": "ESPAÑA",
+        "talle": "S",
+        "precio": 12500,
+        "imagen": "espana.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 14,
+        "pais": "ESPAÑA",
+        "talle": "L",
+        "precio": 12500,
+        "imagen": "espana.webp",
+        "cantidad": 1
+    },
+
+    {
+        "id": 15,
+        "pais": "ESPAÑA",
+        "talle": "M",
+        "precio": 12500,
+        "imagen": "espana.webp",
+        "cantidad": 1
+    }
+
+
+]

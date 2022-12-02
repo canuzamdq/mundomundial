@@ -2,51 +2,21 @@
 
 let subtotal = 0
 let total = 0
+let productoRepetido = 0
 let carrito = []
 
 
+
 class camisetas {
-    constructor(id, pais, talle, precio, imagen) {
+    constructor(id, pais, talle, precio, imagen, cantidad) {
         this.id = id;
         this.pais = pais;
         this.talle = talle;
         this.precio = precio;
         this.imagen = imagen;
+        this.cantidad = cantidad;
     }
 
-}
-
-// Instanciación de objetos
-
-const camiseta1 = new camisetas(1, "ARGENTINA", "L", 13000, "argentina.webp")
-const camiseta2 = new camisetas(2, "ARGENTINA", "M", 12000, "argentina.webp")
-const camiseta3 = new camisetas(3, "URUGUAY", "M", 13500, "uruguay.webp")
-const camiseta4 = new camisetas(4, "ECUADOR", "L", 9000, "ecuador.webp")
-const camiseta5 = new camisetas(5, "ECUADOR", "M", 9000, "ecuador.webp")
-const camiseta6 = new camisetas(6, "BRASIL", "M", 12500, "brasil.webp")
-const camiseta7 = new camisetas(7, "BRASIL", "L", 14000, "brasil.webp")
-const camiseta8 = new camisetas(8, "ALEMANIA", "S", 15000, "alemania.webp")
-const camiseta9 = new camisetas(9, "ALEMANIA", "M", 15000, "alemania.webp")
-const camiseta10 = new camisetas(10, "FRANCIA", "S", 12500, "francia.webp")
-const camiseta11 = new camisetas(11, "FRANCIA", "S", 12500, "francia.webp")
-const camiseta12 = new camisetas(12, "FRANCIA", "S", 12500, "francia.webp")
-const camiseta13 = new camisetas(13, "ESPAÑA", "S", 12500, "espana.webp")
-const camiseta14 = new camisetas(14, "ESPAÑA", "M", 12500, "espana.webp")
-const camiseta15 = new camisetas(15, "ESPAÑA", "L", 12500, "espana.webp")
-
-
-
-// Array de objetos
-
-let stock = []
-
-if (localStorage.getItem("stock")){
-    stock = JSON.parse(localStorage.getItem("stock"))
-
-} else{
-    
-    stock.push(camiseta1, camiseta2, camiseta3, camiseta4, camiseta5, camiseta6, camiseta7, camiseta8, camiseta9, camiseta10, camiseta11, camiseta12, camiseta13, camiseta14, camiseta15)
-    localStorage.setItem("stock", JSON.stringify(stock))
 }
 
 // Captura DOM
@@ -57,7 +27,47 @@ let coincidencia = document.getElementById("coincidencia") // Funcion buscarCami
 let buscador = document.getElementById("buscador") // Funcion buscarCamiseta
 let ordenar = document.getElementById("filtro") // Funcion ordenar
 let modalCarrito = document.getElementById("modalBody") //Funcion mostrarCarrito
-let modalFooter = document.getElementById("modalFooter") // Funcion calcularTotal
+let modalFooter = document.getElementById("modalFooter") // Footer del carrito donde se muestra el valor de la compra
+let btnFinalizarCompra = document.getElementById("btnFinalizarCompra") // Botaon finalizar compra del Carrito
+
+
+
+// Array de objetos - Carga asincronica de datos desde archivo json
+
+let stock = []
+
+const cargarStock = async () => {
+    const response = await fetch("../camisetas.json")
+    const data = await response.json()
+    for (let camiseta of data) {
+        let nuevaCamiseta = new camisetas(camiseta.id, camiseta.pais, camiseta.talle, camiseta.precio, camiseta.imagen, camiseta.cantidad)
+        stock.push(nuevaCamiseta)
+    }
+    localStorage.setItem("stock", JSON.stringify(stock))
+    mostrarStockDOM(stock)
+}
+
+if (localStorage.getItem("stock")) {
+    stock = JSON.parse(localStorage.getItem("stock"))
+
+} else {
+    cargarStock()
+}
+
+
+// Array de objetos con los productos del Carrito de compras
+
+if (localStorage.getItem("carrito")) {
+    carrito = JSON.parse(localStorage.getItem("carrito"))
+    modalCarrito.innerHTML = ""
+    mostrarCarrito(carrito)
+
+
+} else {
+
+    modalCarrito.innerHTML = ""
+    mostrarCarrito(carrito)
+}
 
 
 
@@ -77,61 +87,156 @@ function mostrarStockDOM(array) {
                                         <img src="./img/${producto.imagen}" class="card-img-top" alt="foto camiseta"> 
                                         <div class="card-body">
                                             <h5 class="card-title">${producto.pais}</h5>
-                                            <p class="card-text">Camiseta de ${producto.pais} talle ${producto  .talle}</p>
+                                            <p class="card-text">Camiseta de ${producto.pais} talle ${producto.talle}</p>
                                             <p>Precio $${producto.precio}</p>
                                         <button id="btnAgregar${producto.id}" class="btn btn-primary">Agregar al Carrito</button>
                                         </div>
                                     </div>`
         divProductos.appendChild(nuevaCamiseta)
         let btnAgregado = document.getElementById(`btnAgregar${producto.id}`)
-        btnAgregado.addEventListener("click", () => {agregarAlCarrito(producto)})
+        btnAgregado.addEventListener("click", () => {
+            comparaCarrito(producto)
+        })
 
 
     }
 
 }
 
-function agregarAlCarrito(producto) {
-    carrito.push(producto)
+// Funcion que compara si el prducto agregado ya existe mediante su ID. Si existe agrega +1 en cantidad.
+
+function comparaCarrito(producto) {
+    for (let indice of carrito) {
+        if (indice.id == producto.id) {
+            productoRepetido = indice.id
+            precioTotal = indice.precio
+
+        }
+
+    }
+
+    if (productoRepetido == producto.id) {
+        producto.precio = precioTotal + producto.precio
+        producto.cantidad = producto.cantidad + 1
+        console.log("cantidad" + producto.cantidad + "precio " + producto.precio)
+        localStorage.setItem("carrito", JSON.stringify(carrito))
+        swal.fire({
+            title: "Producto agregado!",
+            text: `Se agrego camiseta de ${producto.pais} al carrito`,
+            icon: "success",
+            confirmButtonText: 'Aceptar',
+            timer: 3000
+        })
+
+
+    } else {
+        agregarAlCarrito(producto)
+    }
     modalCarrito.innerHTML = ""
     mostrarCarrito(carrito)
-    alert("Producto agregado al carrito")
 }
 
+
+// Funcion que agrega productos al carrito
+
+function agregarAlCarrito(producto) {
+    carrito.push(producto)
+    localStorage.setItem("carrito", JSON.stringify(carrito)) // Almacena los productos del Carrito en localStorage
+    swal.fire({
+        title: "Producto agregado!",
+        text: `Se agrego camiseta de ${producto.pais} al carrito`,
+        icon: "success",
+        confirmButtonText: "Aceptar",
+        timer: 3000,
+
+    });
+
+    modalCarrito.innerHTML = ""
+    mostrarCarrito(carrito)
+
+}
+
+
+
+// Función para mostrar los productos del carrito
+
 function mostrarCarrito(array) {
-    for (mostrarProductos of array) {
-        modalCarrito.innerHTML += `
-        <div class="card border-primary mb-3" id ="productoCarrito${mostrarProductos.id}" style="max-width: 250px;">
+    modalCarrito.innerHTML = ""
+    if (array.length == 0) {
+        modalCarrito.innerHTML = "<p>No hay productos en el carrito</p>"
+    } else {
+        for (mostrarProductos of array) {
+            modalCarrito.innerHTML += `
+        <div class="card" id ="productoCarrito${mostrarProductos.id}" style="width: 18rem;" id=cardCarrito>
             <img class="card-img-top" height="auto" src="./img/${mostrarProductos.imagen}" alt="${mostrarProductos.pais}">
             <div class="card-body">
                     <p class="card-title">Camiseta de ${mostrarProductos.pais}</p>
                     <p class="card-text">Talle ${mostrarProductos.talle}</p>
-                    <p class="card-text">$${mostrarProductos.precio}</p> 
-                    <button class= "btn btn-danger" id="botonEliminar${mostrarProductos.id}"><i class="fas fa-trash-alt"></i>Eliminar</button>
+                    <p class="card-text">$${mostrarProductos.precio}</p>
+                    <p class="card-text">${mostrarProductos.cantidad}</p>
+                    <button onCLick = "eliminarDelCarrito(${mostrarProductos.id})"class= "btn btn-danger" id="botonEliminar${mostrarProductos.id}"><i class="fas fa-trash-alt"></i>Eliminar</button>
             </div>    
         </div>`
-        
-        let btnBorrarProducto = document.getElementById(`botonEliminar${mostrarProductos.id}`)
-        btnBorrarProducto.addEventListener("click", ()=>{borrarDelCarrito(array)}) 
-        
+
+        }
     }
-    
-    subtotal += mostrarProductos.precio
-    console.log(subtotal)
-    
+
+    totalCarrito(array)
 }
 
-function borrarDelCarrito(carrito){
-        let eliminarProducto = carrito.indexOf(mostrarProductos)
-        carrito.splice(eliminarProducto, 1)
-        alert("Producto Eliminado del carrito")
-        modalCarrito.innerHTML = ""
-        mostrarCarrito(carrito)
-    
-}   
+
+// Función que acumula el valor total de los productos en el carrito + IVA del 21%
+
+function totalCarrito(array) {
+    let acumulador = 0
+    acumulador = array.reduce((acum, producto) => acum + producto.precio, 0)
+    if (acumulador == 0) {
+        modalFooter.innerHTML = ""
+    } else {
+        modalFooter.innerHTML = `<h5>Subtotal $${acumulador}</h5>
+                                 <h5>IVA (21%): $${acumulador*0.21}</h5>
+                                 <h5>Total: $${acumulador*1.21}</h5>`
+    }
+}
 
 
-//Funcion para buscar
+// Función para eliminar productos del carrito. Recibe como parametro el ID de producto proviniente de la función mostrarcarrito()
+
+function eliminarDelCarrito(id) {
+    const producto = carrito.find((producto) => producto.id == id);
+    swal.fire({
+        title: "Eliminar del Carrito",
+        text: `¿Desea eliminar la camiseta ${producto.pais}?`,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: "Eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                'Eliminado!',
+                'Producto Eliminado del Carrito',
+                'success'
+            );
+            carrito.splice(carrito.indexOf(producto), 1);
+            localStorage.setItem("carrito", JSON.stringify(carrito)); // Elimina el producto en localStorage
+            subtotal = subtotal - producto.precio;
+            modalFooter.innerHTML = "";
+            modalFooter.innerHTML = `<p>Subtotal $${subtotal}</p><p>TOTAL C/IVA $${subtotal * 1.21}`;
+            console.log(subtotal);
+            modalCarrito.innerHTML = "";
+            mostrarCarrito(carrito);
+
+        }
+    });
+
+
+}
+
+
+
+// Funcion para buscar
 
 function buscarCamiseta(camisetaBuscada, array) {
 
@@ -181,125 +286,108 @@ function ordenarStock(array) {
 }
 
 
-// Funcion para Agregar camisetas al stock
+// Funcion para Agregar camisetas al stock. Valida que los datos estén ingresados.
 
 function nuevaCamiseta(array) {
     let nuevoPais = document.getElementById("nuevoPais")
     let nuevoTalle = document.getElementById("nuevoTalle")
     let nuevoPrecio = document.getElementById("nuevoPrecio")
     let id = stock.length + 1
-    const camiseta = new camisetas(id, nuevoPais.value, nuevoTalle.value, nuevoPrecio.value, "generica.jpg")
-    array.push(camiseta)
-    localStorage.setItem("stock", JSON.stringify(array))
-    //Reset inputs
-    nuevoPais.value = ""
-    nuevoTalle.value = ""
-    nuevoPrecio.value = ""
-    mostrarStockDOM(array)
+    if (nuevoPais.value.length != 0 && (nuevoTalle.value.toUpperCase() == "S" || nuevoTalle.value.toUpperCase() == "M" || nuevoTalle.value.toUpperCase() == "L" || nuevoTalle.value.toUpperCase() == "XL") && nuevoPrecio.length != 0) { // Valida que los input no estén vacíos y controla que los talles ingresados sean correctos
+        const camiseta = new camisetas(id, nuevoPais.value, nuevoTalle.value, parseInt(nuevoPrecio.value), "generica.jpg", 1)
+        array.push(camiseta)
+        localStorage.setItem("stock", JSON.stringify(array))
+        swal.fire({
+            title: "Producto agregado!",
+            text: `Se agrego camiseta de ${camiseta.pais} al stock`,
+            icon: "success",
+            confirmButtonText: 'Aceptar',
+            timer: 3000
+        });
+        //Reset inputs
+        nuevoPais.value = ""
+        nuevoTalle.value = ""
+        nuevoPrecio.value = ""
+        Swal.fire({
+            position: 'bottom-center',
+            icon: 'success',
+            title: 'Cargando nuevo producto al stock...',
+            showConfirmButton: false,
+            timer: 3000
+        })
+       // mostrarStockDOM(array)
+    } else {
+        swal.fire({
+            title: "Error",
+            text: "Verifique que todos los campos estén completos",
+            icon: "error",
+            confirmButtonText: "Aceptar",
+        });
+        //preventDefault()
+
+
+    }
 }
+
+
+// Función para finalizar compra. Si no hay productos en el carrito muestra un mensaje de alerta.
+
+function finalizarCompra() {
+    if (carrito.length < 1) {
+        swal.fire({
+            title: "Finalizar compra",
+            text: `No hay productos en el carrito`,
+            icon: "error",
+            confirmButtonText: "Aceptar",
+        })
+
+    } else {
+        swal.fire({
+            title: "Finalizar compra",
+            text: `¿Desea finalizar su compra?`,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: "Aceptar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: "Compra realizada!",
+                    text: "Muchas gracias por utilizar el simulador de compras de camisetas",
+                    icon: "success",
+                    confirmButtonText: "Aceptar"
+                })
+            }
+            carrito = []
+            localStorage.removeItem("carrito")
+        })
+    }
+}
+
+
+
+
 // Eventos
 
 btnNuevaCamiseta.addEventListener("click", () => {
     nuevaCamiseta(stock)
 })
+
 buscador.addEventListener("input", () => {
     buscarCamiseta(buscador.value, stock)
 })
+
 ordenar.addEventListener("change", () => {
     ordenarStock(stock)
 })
 
+btnFinalizarCompra.addEventListener("click", () => {
+    finalizarCompra()
+})
+
+
+
 mostrarStockDOM(stock)
-
-
-
-
-
-
-/*// CODIGO ANTERIOR
-
-// Función carrito. Acumula los productos y calcula el subtotal y el total de la compra (este ultimo con iva del 21%)
-function llenarCarrito(indice) {
-    if (indice == 0) {
-        bandera = false
-        alert(`Detalle de compra de camisetas:\n ${carritoAcumulado} \n TOTAL C/IVA: ${total}`)
-        alert("Gracias por su compra")
-    } else {
-        subtotal += stock[indice - 1].precio
-        total = subtotal * 1.21
-        carrito.push(stock[indice - 1])
-        carritoAcumulado += (`${carrito[carrito.length-1].pais} talle: ${carrito[carrito.length-1].talle} precio: ${carrito[carrito.length-1].precio}/ Subtotal: $${subtotal}\n`)
-    }
-}
-
-// Funcion para eliminar un elemento del stock
-
-function eliminarStock(array) {
-    alert("Seleccione un item que se muestra en consola para eliminar")
-    for (let elem of array) {
-        console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
-    }
-    let idEliminar = parseInt(prompt("Ingrese el id a eliminar"))
-    //mapeamos para tener un array con los indices
-    let indices = array.map(camiseta => camiseta.id)
-    //indexOf para buscar ese ID en el array de indices y devolvernos la posición
-    let indice = indices.indexOf(idEliminar)
-    //con la posición del elemento aplico splice al array de objetos
-    array.splice(indice, 1)
-}
-
-// Funcion para modificar el stock
-
-function modificarStock(array) {
-    alert("Seleccione un elemento del stock mostrado por consola para modificar")
-
-    for (let elem of array) {
-        console.log(`${elem.id} - ${elem.pais} - ${elem.talle} - ${elem.precio}`)
-    }
-    let idModificar = parseInt(prompt("Ingrese el id a modificar"))
-    //Mapeo de array para obtener los indices
-    let indices = array.map(camiseta => camiseta.id)
-    //indexOf para buscar ese ID en el array de indices 
-    let indice = indices.indexOf(idModificar)
-    //Ingreso de los nuevos datos
-    pais = prompt(`Ingrese el pais de la camiseta:`).toUpperCase()
-    talle = prompt(`Ingrese talle de la camiseta (S-M-L-XL):`).toUpperCase()
-    precio = parseInt(prompt(`Ingrese precio de la camiseta:`))
-    //con la posición del elemento y los datos ingresados modificamos el array
-    array[indice].pais = pais
-    array[indice].talle = talle
-    array[indice].precio = precio
-}
-
-
-
-
-
-function buscarTalle(array) {
-    let talleBuscado = prompt("Ingrese el talle a buscar (S-M-L-XL):").toUpperCase()
-    if (talleBuscado == "S" || talleBuscado == "M" || talleBuscado == "L" || talleBuscado == "XL") {
-        let busqueda = array.filter(
-            (camiseta) => camiseta.talle == talleBuscado
-        )
-        if (busqueda.length == 0) {
-            alert(`No se encontraron camisetas talle ${talleBuscado}`)
-        } else {
-            mostrarStock(busqueda)
-        }
-    } else {
-        alert(`Verifique el dato ingresado`)
-        buscarTalle(array)
-
-    }
-}
-*let bontonBuscar = document.getElementById("botonBuscar")
-let buscador = document.getElementById("buscador")
-bontonBuscar.addEventListener("click", respuestaClick)
-
-function respuestaClick() {
-    alert(`Buscando ${buscador.value}...`)
-}*/
-
-
-// Ejecución del algortimo.
 

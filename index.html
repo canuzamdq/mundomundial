@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/styles.css">
   <title>Mundo Mundial - Camisetas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -12,32 +13,35 @@
 
 <body>
   <header class="sticky-top">
-    <nav class="navbar bg-light">
+    <nav class="navbar bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand">Mundo Mundial - Camisetas</a>
+        <a class="navbar-brand"><p class = "tituloNavBar">Mundo Mundial - Camisetas Quatar 2022</p></a>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Buscar camiseta" aria-label="Search"
             id="buscador">
         </form>
       </div>
     </nav>
-    <section class="sticky-top">
-      <select class="form-select" aria-label="Default select example" id="filtro">
-        <option selected>Ordenar camisetas</option>
-        <option value="ordenAlfabetico">Orden alfabético</option>
-        <option value="precioMenor">Menor precio</option>
-        <option value="precioMayor">Mayor precio</option>
-      </select>
-    </section>
+  
+
   </header>
+  <div class="barra">
+  <section class="sticky-top filtro">
+    <select class="form-select" aria-label="Default select example" id="filtro">
+      <option selected>Ordenar camisetas</option>
+      <option value="ordenAlfabetico">Orden alfabético</option>
+      <option value="precioMenor">Menor precio</option>
+      <option value="precioMayor">Mayor precio</option>
+    </select>
+  </section>
+
   <div class="modalCarrito d-flex flex-row-reverse">
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Carrito
     </button>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-      aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -45,53 +49,60 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" id="modalBody">
-            
+
+          </div>
+          <div id="modalFooter">
+
           </div>
           <div class="modal-footer">
-            <div id="modalFooter">
-              
-            </div>
+
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="button" class="btn btn-primary">Finalizar compra</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btnFinalizarCompra">Finalizar compra</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+  <!-- Fin Modal -->
+</div>
+
   <div id="coincidencia"></div>
   <div id="productos" class="row col-12 col-md-6, col-lg-4, my-1">
 
 
   </div>
-  <section style="background-color: lightgrey; padding:20px; text-align: center; ">
+  <section style="background-color: lightgrey; padding:20px; text-align: center;" id="nuevaCamiseta">
     <form>
       <h2>Agregar camisetas al stock</h2>
       <div class="row mb-3">
         <label for="pais" class="col-sm-2 col-form-label">Ingrese pais:</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="nuevoPais" required>
+          <input type="text" class="form-control" id="nuevoPais">
         </div>
       </div>
       <div class="row mb-3">
         <label for="talle" class="col-sm-2 col-form-label">Ingrese talle (S-M-L-XL):</label>
         <div class="col-sm-10">
-          <input type="text" class="form-control" id="nuevoTalle" required>
+          <input type="text" class="form-control" id="nuevoTalle">
         </div>
       </div>
       <div class="row mb-3">
         <label for="talle" class="col-sm-2 col-form-label">Ingrese precio:</label>
         <div class="col-sm-10">
-          <input type="number" class="form-control" id="nuevoPrecio" required>
+          <input type="number" class="form-control" id="nuevoPrecio">
         </div>
       </div>
       <button type="submit" class="btn btn-primary" id="btnNuevaCamiseta">Agregar camiseta</button>
+
+
     </form>
   </section>
-  
 
   <!--JS-->
   <script src="./js/mundomundial.js"></script>
+
+  <!--Sweet Alert-->
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!--bootstrap-->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"

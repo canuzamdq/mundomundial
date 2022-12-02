@@ -1,0 +1,40 @@
+.navbar {
+    height: 5rem;
+}
+
+    a.navbar-brand {
+        color: azure;
+    }
+
+        a.navbar-brand:hover {
+            color: azure;
+        }
+
+
+#buscador{
+    border-radius: 0;
+}
+
+.filtro {
+    width: 20rem;
+   
+}
+
+.accordion-flush {
+    max-width: 20rem;
+}
+
+.form-select {
+     border-radius: 0 !important;
+   
+}
+
+.barra {
+    background-color: white;
+    z-index: 2000;
+    position:sticky;
+    top: 80px;
+    display: flex;
+    justify-content: flex-end;
+}
+
